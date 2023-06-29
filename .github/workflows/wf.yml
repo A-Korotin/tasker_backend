@@ -33,4 +33,4 @@ jobs:
       - name: Gradle clean
         run: ./gradlew clean
       - name: Gradle run unit tests
-        run: ./gradlew test --spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+        run: ./gradlew test --spring.datasource.url=jdbc:postgresql://postgres:5432/postgres
