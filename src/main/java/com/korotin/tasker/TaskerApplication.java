@@ -9,9 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TaskerApplication {
 
-    private TaskerApplication() {
-        throw new IllegalStateException("Utility class");
-    }
     public static void main(final String[] args) {
         SpringApplication.run(TaskerApplication.class, args);
     }
