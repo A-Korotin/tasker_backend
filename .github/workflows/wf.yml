@@ -32,7 +32,9 @@ jobs:
         run: chmod +x gradlew
       - name: Gradle clean
         run: ./gradlew clean
-      - name: Gradle build
-        run: ./gradlew build
+      - name: Setup config
+        run: |
+          mkdir config
+          echo 'spring.datasource.url=jdbc:postgresql://postgres:5432/postgres' > config/application.properties
       - name: Gradle run unit tests
         run: ./gradlew test
