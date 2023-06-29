@@ -6,6 +6,11 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Domain entity for Tasker application user. Every user should have role.
+ * Default role is {@link UserRole#USER}
+ * @see UserRole
+ */
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
