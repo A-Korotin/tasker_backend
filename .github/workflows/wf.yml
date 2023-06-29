@@ -1,18 +1,32 @@
-name: Linter
+name: CI
 
-on: push
-
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+    
 jobs:
-  super-linter:
-    name: Check code base
+  default:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        # health check
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Run super-Linter
-      uses: github/super-linter@v4
-      env: 
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'oracle'
+      - name: Gradle run unit tests
+        run: ./gradlew test
