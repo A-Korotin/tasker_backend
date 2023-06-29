@@ -30,5 +30,9 @@ jobs:
           distribution: 'oracle'
       - name: Setup gradlew permissions
         run: chmod +x gradlew
+      - name: Gradle clean
+        run: ./gradlew clean
+      - name: Gradle build
+        run: ./gradlew build
       - name: Gradle run unit tests
         run: ./gradlew test
