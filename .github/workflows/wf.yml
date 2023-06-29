@@ -28,5 +28,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'oracle'
+      - name: Setup gradlew permissions
+        run: chmod +x gradlew
       - name: Gradle run unit tests
         run: ./gradlew test
