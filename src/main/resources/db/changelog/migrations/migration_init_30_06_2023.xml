@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+    <changeSet id="1" author="Alexey Korotin">
+        <sql dbms="postgresql"
+             endDelimiter=";"
+             splitStatements="true"
+             stripComments="true">
+
+        CREATE TABLE task (
+          id UUID PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          start_date TIMESTAMP NOT NULL,
+          done BOOLEAN NOT NULL DEFAULT true
+        );
+
+        CREATE TABLE event (
+          id UUID PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          start_date TIMESTAMP NOT NULL,
+          end_date TIMESTAMP NOT NULL
+        );
+
+        CREATE TABLE usr (
+          id UUID PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          role TEXT NOT NULL
+        );
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
