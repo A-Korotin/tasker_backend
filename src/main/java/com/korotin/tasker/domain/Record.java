@@ -1,6 +1,7 @@
 package com.korotin.tasker.domain;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public abstract class Record extends BaseEntity {
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false, columnDefinition = "TIMESTAMPZ")
     private ZonedDateTime startDate;
 }

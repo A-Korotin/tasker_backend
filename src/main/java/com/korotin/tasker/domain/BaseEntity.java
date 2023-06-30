@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import java.util.UUID;
 
@@ -23,5 +24,6 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 }
