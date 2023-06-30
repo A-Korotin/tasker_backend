@@ -22,6 +22,6 @@ public abstract class Record extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMPZ")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private ZonedDateTime startDate;
 }

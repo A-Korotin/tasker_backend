@@ -18,6 +18,6 @@ import java.time.ZonedDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Event extends Record {
-    @Column(columnDefinition = "TIMESTAMPZ", nullable = false)
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private ZonedDateTime endDate;
 }
