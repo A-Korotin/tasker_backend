@@ -6,7 +6,7 @@ on:
     branches: [dev, master]
     
 jobs:
-  default:
+  unit-testing:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -15,6 +15,8 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
           POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
         # health check
         options: >-
           --health-cmd pg_isready
@@ -33,4 +35,4 @@ jobs:
       - name: Gradle clean
         run: ./gradlew clean
       - name: Gradle run unit tests
-        run: ./gradlew test -Pargs='--spring.datasource.url=jdbc:postgresql://postgres:5432/postgres'
+        run: ./gradlew test
