@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
@@ -61,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<OutputUserDTO> getAllUsers() {
+    public List<OutputUserDTO> getAllUsers() {
         return StreamSupport.stream(userService.findAll().spliterator(), false)
                 .map(userMapper::userToDTO)
                 .toList();
