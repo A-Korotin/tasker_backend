@@ -13,6 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 @RestControllerAdvice
@@ -35,7 +36,7 @@ public class ExceptionHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Map<String, String> verboselyHandleMismatchException(MethodArgumentTypeMismatchException e) {
-        String requiredType = e.getRequiredType().getSimpleName();
+        String requiredType = Objects.nonNull(e.getRequiredType()) ? e.getRequiredType().getSimpleName() : "unknown";
         String argumentName = e.getName();
         Map<String, String> errors = new HashMap<>(2);
         errors.put("expectedType", requiredType);
