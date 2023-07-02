@@ -28,6 +28,6 @@ public class DatabaseConfig implements CommandLineRunner {
         user.setName("Test user");
         user.setRole(UserRole.ADMIN);
 
-        userService.register(user);
+        userService.save(user);
     }
 }
