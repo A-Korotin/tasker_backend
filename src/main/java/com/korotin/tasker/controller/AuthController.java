@@ -19,11 +19,6 @@ import java.security.Principal;
 public class AuthController {
     private final UserService userService;
 
-    @GetMapping("/user")
-    public Principal tryAuth(Principal principal) {
-        return principal;
-    }
-
     @Parameter(name = "response", hidden = true)
     @PostMapping("/register")
     public OutputUserDTO register(@Valid @RequestBody RegisterUserDto dto, HttpServletResponse response) {
