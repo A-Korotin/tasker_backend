@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,18 @@ public class ExceptionHandlingControllerAdvice {
             errors.put(field, errorMessage);
         });
         log.warn("Invalid input: binding errors: {}", errors);
+        return errors;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Map<String, String> verboselyHandleMismatchException(MethodArgumentTypeMismatchException e) {
+        String requiredType = e.getRequiredType().getSimpleName();
+        String argumentName = e.getName();
+        Map<String, String> errors = new HashMap<>(2);
+        errors.put("expectedType", requiredType);
+        errors.put("argument", argumentName);
+        errors.put("cause", "argument type mismatch");
         return errors;
     }
 
