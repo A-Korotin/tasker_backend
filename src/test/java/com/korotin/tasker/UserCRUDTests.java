@@ -1,6 +1,7 @@
 package com.korotin.tasker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.korotin.tasker.domain.UserRole;
 import com.korotin.tasker.domain.dto.OutputUserDTO;
 import com.korotin.tasker.domain.dto.UserDTO;
 import com.korotin.tasker.source.CreateUserTestProvider;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -103,5 +105,32 @@ public class UserCRUDTests extends BaseTests {
         assertEquals(updated.getEmail(), update.getEmail());
         assertEquals(updated.getName(), update.getName());
         assertEquals(updated.getRole(), update.getRole());
+    }
+
+    @Test
+    public void getNotFoundTest() throws Exception {
+        mvc.perform(get("/api/users/" + UUID.randomUUID())
+                .with(httpBasic("test@test.com", "qwerty")))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void editNotFoundTest() throws Exception {
+        UserDTO validUser = UserDTO.builder()
+                .email("totally_valid@email.com").password("qwerty1").name("Valid name").role(UserRole.USER)
+                .build();
+
+        mvc.perform(put("/api/users/" + UUID.randomUUID())
+                .with(httpBasic("test@test.com", "qwerty"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(validUser)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteNotFoundTest() throws Exception {
+        mvc.perform(delete("/api/users/" + UUID.randomUUID())
+                        .with(httpBasic("test@test.com", "qwerty")))
+                .andExpect(status().isNotFound());
     }
 }
