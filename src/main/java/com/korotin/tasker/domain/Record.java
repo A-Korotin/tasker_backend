@@ -20,8 +20,8 @@ import java.time.ZonedDateTime;
 public abstract class Record extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
+    protected String description;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    private ZonedDateTime startDate;
+    protected ZonedDateTime startDate;
 }

@@ -20,8 +20,8 @@ public abstract class BaseEntity {
     @Id
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    protected UUID id;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String name;
+    protected String name;
 }
