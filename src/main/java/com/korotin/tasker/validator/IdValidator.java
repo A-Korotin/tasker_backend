@@ -27,6 +27,7 @@ public class IdValidator implements ConstraintValidator<ExistingId, UUID> {
 
     @Override
     public boolean isValid(UUID value, ConstraintValidatorContext context) {
+        // todo optimization: existsById
         if (service.findById(value).isPresent()) {
             return true;
         }
