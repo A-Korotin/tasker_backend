@@ -21,6 +21,9 @@ public abstract class ProjectMapper {
     public abstract OutputProjectDTO projectToOutputDTO(Project project);
 
     @Mapping(source = "ownerId", target = "owner", qualifiedByName = "idToUser")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "events", ignore = true)
     public abstract Project DTOToProject(ProjectDTO dto);
 
     @Named("idToUser")

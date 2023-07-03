@@ -12,9 +12,11 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
 
     @Mapping(target = "role", constant = "USER")
+    @Mapping(target = "id", ignore = true)
     User registerDTOToUser(RegisterUserDto dto);
 
     OutputUserDTO userToDTO(User user);
 
+    @Mapping(target = "id", ignore = true)
     User DTOToUser(UserDTO userDTO);
 }
