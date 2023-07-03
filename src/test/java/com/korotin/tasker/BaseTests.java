@@ -1,5 +1,6 @@
 package com.korotin.tasker;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class BaseTests {
@@ -11,5 +12,9 @@ public abstract class BaseTests {
 
     protected <T> T fromJson(String json, Class<T> clazz) throws Exception {
         return mapper.readValue(json, clazz);
+    }
+
+    protected <T> T fromJson(String json, TypeReference<T> type) throws Exception {
+        return mapper.readValue(json, type);
     }
 }
