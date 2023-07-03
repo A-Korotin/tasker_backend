@@ -29,7 +29,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+    private final UserMapper userMapper;
 
     @GetMapping("/me")
     public OutputUserDTO getCurrentAuthorizedUser(Principal principal) {

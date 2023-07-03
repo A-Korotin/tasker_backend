@@ -18,14 +18,15 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final UserMapper mapper;
 
     @Parameter(name = "response", hidden = true)
     @PostMapping("/register")
     public OutputUserDTO register(@Valid @RequestBody RegisterUserDto dto, HttpServletResponse response) {
-        User user = userService.save(UserMapper.INSTANCE.registerDTOToUser(dto));
+        User user = userService.save(mapper.registerDTOToUser(dto));
         response.setStatus(HttpServletResponse.SC_CREATED);
 
-        return UserMapper.INSTANCE.userToDTO(user);
+        return mapper.userToDTO(user);
     }
 
 }
