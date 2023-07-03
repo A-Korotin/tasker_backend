@@ -6,6 +6,7 @@ import com.korotin.tasker.domain.dto.UserDTO;
 import com.korotin.tasker.exception.NotFoundException;
 import com.korotin.tasker.mapper.UserMapper;
 import com.korotin.tasker.service.UserService;
+import com.korotin.tasker.validator.annotation.ExistingId;
 import com.korotin.tasker.validator.annotation.UniqueUserEmail;
 import com.korotin.tasker.validator.annotation.ValidUserEmail;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public OutputUserDTO getUserById(@PathVariable UUID userId) {
+    public OutputUserDTO getUserById(@PathVariable @ExistingId(responsible = UserService.class) UUID userId) {
         User user = userService.findById(userId).orElseThrow(() ->
                 new NotFoundException("User with id '%s' could not be found".formatted(userId)));
 
@@ -56,13 +57,14 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @ValidUserEmail(dtoIndex = 0, idIndex = 1)
-    public OutputUserDTO editUser(@Valid @RequestBody UserDTO userDTO, @PathVariable UUID userId) {
+    public OutputUserDTO editUser(@Valid @RequestBody UserDTO userDTO,
+                                  @PathVariable @ExistingId(responsible = UserService.class) UUID userId) {
         User updated = userService.update(userId, userMapper.DTOToUser(userDTO));
         return userMapper.userToDTO(updated);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable UUID userId) {
+    public void deleteUser(@PathVariable @ExistingId(responsible = UserService.class) UUID userId) {
         userService.delete(userId);
     }
 
