@@ -1,7 +1,6 @@
 package com.korotin.tasker.domain.dto;
 
 import com.korotin.tasker.domain.UserRole;
-import com.korotin.tasker.validator.annotation.UniqueUserEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +24,6 @@ public class UserDTO {
     @NotNull
     @NotBlank
     @Email
-    @UniqueUserEmail
     public String email;
 
     @NotNull

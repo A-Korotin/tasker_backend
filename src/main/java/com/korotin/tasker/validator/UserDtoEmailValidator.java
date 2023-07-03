@@ -1,5 +1,6 @@
 package com.korotin.tasker.validator;
 
+import com.korotin.tasker.domain.dto.UserDTO;
 import com.korotin.tasker.exception.ConflictException;
 import com.korotin.tasker.service.UserService;
 import com.korotin.tasker.validator.annotation.UniqueUserEmail;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserEmailValidator implements ConstraintValidator<UniqueUserEmail, String> {
+public class UserDtoEmailValidator implements ConstraintValidator<UniqueUserEmail, UserDTO> {
 
     private final UserService userService;
 
@@ -18,13 +19,12 @@ public class UserEmailValidator implements ConstraintValidator<UniqueUserEmail, 
     public void initialize(UniqueUserEmail constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
-
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (userService.findByEmail(value).isEmpty()) {
+    public boolean isValid(UserDTO value, ConstraintValidatorContext context) {
+        if (userService.findByEmail(value.getEmail()).isEmpty()) {
             return true;
         }
 
-        throw new ConflictException("User with email '%s' already exists".formatted(value));
+        throw new ConflictException("User with email '%s' already exists".formatted(value.getEmail()));
     }
 }

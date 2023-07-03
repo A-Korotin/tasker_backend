@@ -6,10 +6,13 @@ import com.korotin.tasker.domain.dto.UserDTO;
 import com.korotin.tasker.exception.NotFoundException;
 import com.korotin.tasker.mapper.UserMapper;
 import com.korotin.tasker.service.UserService;
+import com.korotin.tasker.validator.annotation.UniqueUserEmail;
+import com.korotin.tasker.validator.annotation.ValidUserEmail;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,6 +23,7 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -44,13 +48,14 @@ public class UserController {
 
     @Parameter(name = "response", hidden = true)
     @PostMapping
-    public OutputUserDTO createUser(@Valid @RequestBody UserDTO userDTO, HttpServletResponse response) {
+    public OutputUserDTO createUser(@Valid @RequestBody @UniqueUserEmail UserDTO userDTO, HttpServletResponse response) {
         User user = userService.save(userMapper.DTOToUser(userDTO));
         response.setStatus(HttpServletResponse.SC_CREATED);
         return userMapper.userToDTO(user);
     }
 
     @PutMapping("/{userId}")
+    @ValidUserEmail(dtoIndex = 0, idIndex = 1)
     public OutputUserDTO editUser(@Valid @RequestBody UserDTO userDTO, @PathVariable UUID userId) {
         User updated = userService.update(userId, userMapper.DTOToUser(userDTO));
         return userMapper.userToDTO(updated);
