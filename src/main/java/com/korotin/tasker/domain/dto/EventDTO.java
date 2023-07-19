@@ -3,6 +3,7 @@ package com.korotin.tasker.domain.dto;
 import com.korotin.tasker.domain.DateRange;
 import com.korotin.tasker.service.ProjectService;
 import com.korotin.tasker.validator.annotation.ExistingId;
+import com.korotin.tasker.validator.annotation.ValidDateRange;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -27,5 +28,6 @@ public class EventDTO {
     public String description;
 
     @NotNull
+    @ValidDateRange
     public DateRange dateRange;
 }
