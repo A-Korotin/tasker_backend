@@ -1,5 +1,6 @@
 package com.korotin.tasker.domain.dto;
 
+import com.korotin.tasker.domain.DateRange;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,6 @@ public class OutputEventDTO {
     public UUID projectId;
     public String name;
     public String description;
-    public ZonedDateTime start;
-    public ZonedDateTime end;
+    public DateRange dateRange;
 
 }

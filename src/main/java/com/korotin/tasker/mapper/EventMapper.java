@@ -8,5 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public abstract class EventMapper {
     @Mapping(target = "projectId", source = "project.id")
+    @Mapping(target = "dateRange.start", source = "startDate")
+    @Mapping(target = "dateRange.end", source = "endDate")
     public abstract OutputEventDTO eventToDTO(Event event);
 }
