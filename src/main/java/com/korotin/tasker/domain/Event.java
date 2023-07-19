@@ -20,4 +20,8 @@ import java.time.ZonedDateTime;
 public class Event extends Record {
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private ZonedDateTime endDate;
+
+    public DateRange createDateRange() {
+        return new DateRange(this.startDate, this.endDate);
+    }
 }
