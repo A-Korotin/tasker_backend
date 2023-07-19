@@ -1,8 +1,7 @@
 package com.korotin.tasker.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +23,8 @@ public abstract class Record extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     protected ZonedDateTime startDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    protected Project project;
 }

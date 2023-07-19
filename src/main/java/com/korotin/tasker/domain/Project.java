@@ -21,8 +21,7 @@ public class Project extends BaseEntity {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany
-    @JoinColumn(name = "project_id")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
     @OneToMany
