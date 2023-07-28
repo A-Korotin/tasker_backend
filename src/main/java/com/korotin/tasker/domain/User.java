@@ -3,6 +3,7 @@ package com.korotin.tasker.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Domain entity for Tasker application user. Every user should have role.
@@ -13,6 +14,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "usr")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")

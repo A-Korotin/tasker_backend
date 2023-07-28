@@ -19,9 +19,9 @@ import java.util.UUID;
 public abstract class BaseEntity {
     @Id
     @Column(nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    protected UUID id;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String name;
+    protected String name;
 }
