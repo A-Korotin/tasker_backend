@@ -4,6 +4,7 @@ import com.korotin.tasker.domain.Event;
 import com.korotin.tasker.domain.Project;
 import com.korotin.tasker.domain.dto.EventDTO;
 import com.korotin.tasker.domain.dto.OutputEventDTO;
+import com.korotin.tasker.mapper.config.MapConfig;
 import com.korotin.tasker.service.ProjectService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
-@Mapper(uses = UserMapper.class, componentModel = "spring")
+@Mapper(uses = UserMapper.class, config = MapConfig.class)
 public abstract class EventMapper {
 
     @Autowired
