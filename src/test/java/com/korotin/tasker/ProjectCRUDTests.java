@@ -6,29 +6,28 @@ import com.korotin.tasker.domain.dto.OutputUserDTO;
 import com.korotin.tasker.domain.dto.ProjectDTO;
 import com.korotin.tasker.source.CreateProjectTestProvider;
 import com.korotin.tasker.source.EditProjectTestProvider;
-import jakarta.servlet.http.HttpServletRequestWrapper;
-import org.aspectj.lang.annotation.Before;
-import org.json.JSONArray;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.w3c.dom.stylesheets.LinkStyle;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.util.List;
 import java.util.UUID;
 
+import static com.korotin.tasker.util.JsonUtils.asJsonString;
+import static com.korotin.tasker.util.JsonUtils.fromJson;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 
@@ -36,17 +35,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProjectCRUDTests extends BaseTests {
+public class ProjectCRUDTests {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    @Qualifier("adminHttpBasic")
+    private RequestPostProcessor adminCredentials;
 
     private UUID adminId;
 
     @BeforeAll
     public void setUp() throws Exception {
+        assertNotNull(mvc, "Mock mvc should not be null");
+        assertNotNull(adminCredentials, "Admin credentials should not be null");
+
         String adminJson = mvc.perform(get("/api/users/me")
-                .with(httpBasic("test@test.com", "qwerty")))
+                .with(adminCredentials))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -59,7 +65,7 @@ public class ProjectCRUDTests extends BaseTests {
     @AfterAll
     public void clearProjects() throws Exception {
         String projectsJson = mvc.perform(get("/api/projects")
-                .with(httpBasic("test@test.com", "qwerty")))
+                .with(adminCredentials))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -67,9 +73,14 @@ public class ProjectCRUDTests extends BaseTests {
 
         for (var project:projects) {
             mvc.perform(delete("/api/projects/" + project.getId())
-                    .with(httpBasic("test@test.com", "qwerty")))
+                    .with(adminCredentials))
                     .andExpect(status().isOk());
         }
+    }
+
+    @Test
+    public void contextLoads() {
+        assertNotNull(adminId, "Fetched admin ID should not be null");
     }
 
     @ParameterizedTest
@@ -79,7 +90,7 @@ public class ProjectCRUDTests extends BaseTests {
                 .name(projectName).ownerId(adminId).build();
 
         String projectJson = mvc.perform(post("/api/projects")
-                        .with(httpBasic("test@test.com", "qwerty"))
+                        .with(adminCredentials)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(dto)))
                 .andExpect(status().is(status))
@@ -100,7 +111,7 @@ public class ProjectCRUDTests extends BaseTests {
         ProjectDTO init = ProjectDTO.builder()
                 .name(initName).ownerId(adminId).build();
         String initJson = mvc.perform(post("/api/projects")
-                .with(httpBasic("test@test.com", "qwerty"))
+                .with(adminCredentials)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(init)))
                 .andExpect(status().isCreated())
@@ -114,7 +125,7 @@ public class ProjectCRUDTests extends BaseTests {
                 .name(editName).ownerId(adminId).build();
 
         String editedJson = mvc.perform(put("/api/projects/" + initCreated.getId())
-                .with(httpBasic("test@test.com", "qwerty"))
+                .with(adminCredentials)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(edit)))
                 .andExpect(status().is(status))
