@@ -5,12 +5,16 @@ import com.korotin.tasker.exception.NotFoundException;
 import com.korotin.tasker.repository.UserRepository;
 import com.korotin.tasker.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(UUID id, User value) {
         value.setId(id);
+        value.setPassword(encoder.encode(value.getPassword()));
         return userRepository.save(value);
     }
 
@@ -59,7 +64,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(() ->
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
                 new UsernameNotFoundException("User with email '%s' could not be found".formatted(username)));
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        user.setAuthorities(authorities);
+
+        return user;
     }
 }
