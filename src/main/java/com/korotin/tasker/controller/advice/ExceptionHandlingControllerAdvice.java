@@ -1,5 +1,6 @@
 package com.korotin.tasker.controller.advice;
 
+import com.korotin.tasker.exception.BadRequestException;
 import com.korotin.tasker.exception.ConflictException;
 import com.korotin.tasker.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +63,13 @@ public class ExceptionHandlingControllerAdvice {
     @ExceptionHandler(ConflictException.class)
     public Map<String, String> handleConflict(ConflictException e) {
         log.warn("Conflict exception occurred with cause: {}", e.getMessage());
+        return getErrorMessageEntity(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public Map<String, String> handleBadRequest(BadRequestException e) {
+        log.warn("Bad request exception occurred with cause: {}", e.getMessage());
         return getErrorMessageEntity(e.getMessage());
     }
 }
