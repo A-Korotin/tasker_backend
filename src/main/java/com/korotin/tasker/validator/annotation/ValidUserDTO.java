@@ -1,6 +1,6 @@
 package com.korotin.tasker.validator.annotation;
 
-import com.korotin.tasker.validator.EditUserEmailValidator;
+import com.korotin.tasker.validator.UserDTOValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,10 +12,10 @@ import java.lang.annotation.*;
  * Checks if provided email is unique or is equal to the previous one.
  */
 @Documented
-@Constraint(validatedBy = EditUserEmailValidator.class)
+@Constraint(validatedBy = UserDTOValidator.class)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidUserEmail {
+public @interface ValidUserDTO {
     String message() default "Email is not unique (and does not equal previous)";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
