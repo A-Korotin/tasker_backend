@@ -1,17 +1,16 @@
 package com.korotin.tasker.controller;
 
 import com.korotin.tasker.domain.Project;
-import com.korotin.tasker.domain.User;
 import com.korotin.tasker.domain.dto.OutputProjectDTO;
 import com.korotin.tasker.domain.dto.ProjectDTO;
 import com.korotin.tasker.mapper.ProjectMapper;
 import com.korotin.tasker.service.ProjectService;
-import com.korotin.tasker.service.UserService;
 import com.korotin.tasker.validator.annotation.ExistingId;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +22,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
 @Validated
+@Secured("ROLE_ADMIN")
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper mapper;
