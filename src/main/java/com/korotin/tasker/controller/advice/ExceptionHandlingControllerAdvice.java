@@ -1,8 +1,5 @@
 package com.korotin.tasker.controller.advice;
 
-import com.korotin.tasker.exception.BadRequestException;
-import com.korotin.tasker.exception.ConflictException;
-import com.korotin.tasker.exception.NotFoundException;
 import com.korotin.tasker.exception.TaskerException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
