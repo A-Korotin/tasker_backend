@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/events")
+@Secured("ROLE_ADMIN")
 public class EventController {
     private final EventService eventService;
     private final EventMapper mapper;

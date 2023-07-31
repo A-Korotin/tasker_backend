@@ -1,7 +1,7 @@
 package com.korotin.tasker.controller.advice;
 
-import com.korotin.tasker.exception.ConflictException;
-import com.korotin.tasker.exception.NotFoundException;
+import com.korotin.tasker.exception.TaskerException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -45,23 +45,12 @@ public class ExceptionHandlingControllerAdvice {
         return errors;
     }
 
-    private Map<String, String> getErrorMessageEntity(String message) {
+    @ExceptionHandler(TaskerException.class)
+    public Map<String, String> handleTaskerException(TaskerException e, HttpServletResponse response) {
+        log.warn("{} occurred with cause: {}", e.getClass().getSimpleName(), e.getMessage());
         Map<String, String> error = new HashMap<>(1);
-        error.put("message", message);
+        error.put("message", e.getMessage());
+        response.setStatus(e.getResponseStatus().value());
         return error;
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public Map<String, String> handleNotFound(NotFoundException e) {
-        log.warn("Not found exception occurred with cause: {}", e.getMessage());
-        return getErrorMessageEntity(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException.class)
-    public Map<String, String> handleConflict(ConflictException e) {
-        log.warn("Conflict exception occurred with cause: {}", e.getMessage());
-        return getErrorMessageEntity(e.getMessage());
     }
 }

@@ -14,18 +14,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Assert;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.util.List;
 import java.util.UUID;
 
+import static com.korotin.tasker.util.JsonUtils.asJsonString;
+import static com.korotin.tasker.util.JsonUtils.fromJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,21 +36,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserCRUDTests extends BaseTests {
+public class UserCRUDTests {
 
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    @Qualifier("adminHttpBasic")
+    private RequestPostProcessor adminCredentials;
+
     @Test
-    public void checkMvc() {
-        Assert.notNull(mvc, "Mock mvc should not be null");
+    public void contextLoads() {
+        assertNotNull(mvc, "Mock mvc should not be null");
+        assertNotNull(adminCredentials, "Admin credentials should not be null");
     }
 
     @BeforeEach
     @AfterAll
     public void clearUsers() throws Exception {
         String usersJson = mvc.perform(get("/api/users")
-                        .with(httpBasic("test@test.com", "qwerty")))
+                        .with(adminCredentials))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -59,7 +67,7 @@ public class UserCRUDTests extends BaseTests {
             }
 
             mvc.perform(delete("/api/users/" + user.getId())
-                            .with(httpBasic("test@test.com", "qwerty")))
+                            .with(adminCredentials))
                     .andExpect(status().isOk());
         }
     }
@@ -70,7 +78,7 @@ public class UserCRUDTests extends BaseTests {
         mvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(createDTO))
-                        .with(httpBasic("test@test.com", "qwerty")))
+                        .with(adminCredentials))
                 .andExpect(status().is(status));
     }
 
@@ -80,7 +88,7 @@ public class UserCRUDTests extends BaseTests {
         String userJSON = mvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(init))
-                .with(httpBasic("test@test.com", "qwerty")))
+                .with(adminCredentials))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -89,7 +97,7 @@ public class UserCRUDTests extends BaseTests {
         String updatedJSON = mvc.perform(put("/api/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(update))
-                .with(httpBasic("test@test.com", "qwerty")))
+                .with(adminCredentials))
                 .andExpect(status().is(status))
                 .andReturn().getResponse().getContentAsString();
 
@@ -108,7 +116,7 @@ public class UserCRUDTests extends BaseTests {
     @Test
     public void getNotFoundTest() throws Exception {
         mvc.perform(get("/api/users/" + UUID.randomUUID())
-                .with(httpBasic("test@test.com", "qwerty")))
+                .with(adminCredentials))
                 .andExpect(status().isNotFound());
     }
 
@@ -119,7 +127,7 @@ public class UserCRUDTests extends BaseTests {
                 .build();
 
         mvc.perform(put("/api/users/" + UUID.randomUUID())
-                .with(httpBasic("test@test.com", "qwerty"))
+                .with(adminCredentials)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(validUser)))
                 .andExpect(status().isNotFound());
@@ -128,7 +136,7 @@ public class UserCRUDTests extends BaseTests {
     @Test
     public void deleteNotFoundTest() throws Exception {
         mvc.perform(delete("/api/users/" + UUID.randomUUID())
-                        .with(httpBasic("test@test.com", "qwerty")))
+                        .with(adminCredentials))
                 .andExpect(status().isNotFound());
     }
 }

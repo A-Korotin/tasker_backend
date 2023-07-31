@@ -1,20 +1,22 @@
 package com.korotin.tasker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.korotin.tasker.util.JsonUtils;
+import com.korotin.tasker.domain.User;
 import com.korotin.tasker.domain.UserRole;
 import com.korotin.tasker.domain.dto.OutputUserDTO;
 import com.korotin.tasker.domain.dto.RegisterUserDto;
-import com.korotin.tasker.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.event.annotation.AfterTestExecution;
-import org.springframework.test.context.event.annotation.BeforeTestExecution;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -23,26 +25,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.korotin.tasker.util.JsonUtils.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AuthTests extends BaseTests{
+class AuthTests {
 
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    @Qualifier("adminHttpBasic")
+    private RequestPostProcessor adminCredentials;
+
     @Test
     void contextLoads() {
         Assert.notNull(mvc, "Mock MVC should not be null");
+        Assert.notNull(adminCredentials, "Admin credentials should not be null");
     }
 
     @BeforeEach
     @AfterAll
     public void clearUsers() throws Exception {
         String usersJson = mvc.perform(get("/api/users")
-                        .with(httpBasic("test@test.com", "qwerty")))
+                        .with(adminCredentials))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -54,7 +62,7 @@ class AuthTests extends BaseTests{
             }
 
             mvc.perform(delete("/api/users/" + user.getId())
-                            .with(httpBasic("test@test.com", "qwerty")))
+                            .with(adminCredentials))
                     .andExpect(status().isOk());
         }
     }

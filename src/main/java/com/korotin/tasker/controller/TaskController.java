@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @RequestMapping("/api/tasks")
 @Validated
+@Secured("ROLE_ADMIN")
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper mapper;
