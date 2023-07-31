@@ -20,8 +20,9 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSecurity
+// deprecated usage for @Secured role hierarchy support (31.07.2023 still not ported yet)
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-// deprecated usage for @Secured role hierarchy support (30.07.2023 still not ported yet)
+@SuppressWarnings("deprecation")
 public class WebSecurityConfig {
 
     @Bean
