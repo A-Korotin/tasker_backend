@@ -1,7 +1,7 @@
 package com.korotin.tasker.domain;
 
 
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,13 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public abstract class Record extends BaseEntity {
 
-    private String description;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    protected String description;
 
-    private ZonedDateTime startDate;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    protected ZonedDateTime startDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    protected Project project;
 }

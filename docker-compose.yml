@@ -10,3 +10,12 @@ services:
     #      - ./database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  postgres-test:
+    container_name: pg_test
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test
+    ports:
+      - "5433:5432"
