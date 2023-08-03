@@ -8,6 +8,7 @@ import com.korotin.tasker.mapper.TaskMapper;
 import com.korotin.tasker.service.ProjectService;
 import com.korotin.tasker.service.TaskService;
 import com.korotin.tasker.validator.annotation.ExistingId;
+import com.korotin.tasker.validator.annotation.ValidRecord;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
-// todo 03.08.2023: check if task belongs to the specified project
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects/{projectId}/tasks")
@@ -40,6 +41,7 @@ public class ProjectTasksController {
 
     @GetMapping("/{taskId}")
     @PreAuthorize("hasRole('ADMIN') or @accessService.hasAccess(principal, #projectId)")
+    @ValidRecord(recordProvider = TaskService.class)
     public OutputTaskDTO getTaskById(@PathVariable @ExistingId(responsible = ProjectService.class) UUID projectId,
                                      @PathVariable @ExistingId(responsible = TaskService.class) UUID taskId) {
         Task task = taskService.findById(taskId).orElseThrow();
@@ -62,6 +64,7 @@ public class ProjectTasksController {
 
     @PutMapping("/{taskId}")
     @PreAuthorize("hasRole('ADMIN') or @accessService.hasAccess(principal, #projectId)")
+    @ValidRecord(recordProvider = TaskService.class)
     public OutputTaskDTO editTask(@PathVariable @ExistingId(responsible = ProjectService.class) UUID projectId,
                                   @PathVariable @ExistingId(responsible = TaskService.class) UUID taskId,
                                   @Valid @RequestBody UserTaskDTO dto) {
@@ -73,6 +76,7 @@ public class ProjectTasksController {
 
     @DeleteMapping("/{taskId}")
     @PreAuthorize("hasRole('ADMIN') or @accessService.hasAccess(principal, #projectId)")
+    @ValidRecord(recordProvider = TaskService.class)
     public void deleteTask(@PathVariable @ExistingId(responsible = ProjectService.class) UUID projectId,
                            @PathVariable @ExistingId(responsible = TaskService.class) UUID taskId) {
         taskService.delete(taskId);
