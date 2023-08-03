@@ -4,6 +4,7 @@ import com.korotin.tasker.domain.Project;
 import com.korotin.tasker.domain.Task;
 import com.korotin.tasker.domain.dto.OutputTaskDTO;
 import com.korotin.tasker.domain.dto.TaskDTO;
+import com.korotin.tasker.domain.dto.UserTaskDTO;
 import com.korotin.tasker.mapper.config.MapConfig;
 import com.korotin.tasker.service.ProjectService;
 import org.mapstruct.Mapper;
@@ -23,6 +24,8 @@ public abstract class TaskMapper {
 
     @Mapping(target = "project", source = "projectId", qualifiedByName = "idToProject")
     public abstract Task fromDTO(TaskDTO dto);
+
+    public abstract Task fromDTO(UserTaskDTO dto);
 
     @Named("idToProject")
     public Project idToProject(UUID id) {
