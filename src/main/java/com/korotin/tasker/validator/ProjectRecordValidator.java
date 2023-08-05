@@ -1,8 +1,7 @@
 package com.korotin.tasker.validator;
 
 import com.korotin.tasker.domain.Record;
-import com.korotin.tasker.domain.dto.UserDTO;
-import com.korotin.tasker.exception.BadRequestException;
+import com.korotin.tasker.exception.NotFoundException;
 import com.korotin.tasker.service.CrudService;
 import com.korotin.tasker.service.ProjectService;
 import com.korotin.tasker.validator.annotation.ValidRecord;
@@ -33,13 +32,14 @@ public class ProjectRecordValidator implements ConstraintValidator<ValidRecord, 
             throw new IllegalArgumentException("Method signature does not match expected format");
         }
 
-        Record record = recordProvider.findById(recordId).orElseThrow();
+        Record record = recordProvider.findById(recordId).orElseThrow(() ->
+                new NotFoundException("Record with id '%s' does not exist".formatted(recordId)));
 
         if (record.getProject().getId().equals(projectId)) {
             return true;
         }
 
-        throw new BadRequestException("Record '%s' does not belong to the project '%s'"
+        throw new NotFoundException("Record '%s' does not belong to the project '%s'"
                 .formatted(recordId, projectId));
     }
 
