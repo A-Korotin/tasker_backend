@@ -1,5 +1,6 @@
 package com.korotin.tasker.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ public class OutputTaskDTO {
     public UUID projectId;
     public String name;
     public String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public ZonedDateTime startDate;
     public Boolean done;
 }
