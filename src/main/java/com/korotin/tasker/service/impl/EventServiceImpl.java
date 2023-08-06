@@ -39,4 +39,9 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findById(UUID uuid) {
         return eventRepository.findById(uuid);
     }
+
+    @Override
+    public Iterable<Event> findAllByProjectId(UUID projectId) {
+        return eventRepository.findAllByProject(projectId);
+    }
 }
