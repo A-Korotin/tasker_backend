@@ -4,6 +4,7 @@ import com.korotin.tasker.domain.Event;
 import com.korotin.tasker.domain.Project;
 import com.korotin.tasker.domain.dto.EventDTO;
 import com.korotin.tasker.domain.dto.OutputEventDTO;
+import com.korotin.tasker.domain.dto.UserEventDTO;
 import com.korotin.tasker.mapper.config.MapConfig;
 import com.korotin.tasker.service.ProjectService;
 import org.mapstruct.Mapper;
@@ -28,6 +29,10 @@ public abstract class EventMapper {
     @Mapping(target = "startDate", source = "dateRange.start")
     @Mapping(target = "endDate", source = "dateRange.end")
     public abstract Event fromDTO(EventDTO dto);
+
+    @Mapping(target = "startDate", source = "dateRange.start")
+    @Mapping(target = "endDate", source = "dateRange.end")
+    public abstract Event fromDTO(UserEventDTO dto);
 
     @Named("idToProject")
     public Project getProject(UUID uuid) {
